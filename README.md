@@ -12,7 +12,7 @@ A robust backend for the Web Explorer application, built with [Hono](https://hon
 - **Middleware**: 
   - Custom Request Logger
   - CORS Support
-  - Rate Limiting (20 req / 5s)
+  - Rate Limiting (50 req / 5s)
 
 ## 🏗 Architecture
 
@@ -37,10 +37,9 @@ The project follows **Clean Architecture** principles to ensure maintainability,
    ```bash
    bun install
    ```
-3. Set up environment variables in `.env`:
-   ```env
-   DATABASE_URL=postgres://user:password@localhost:5432/explorer_db
-   PORT=3000
+3. Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
    ```
 
 ### Database Management
