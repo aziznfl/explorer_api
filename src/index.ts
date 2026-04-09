@@ -4,6 +4,7 @@ import { fileItemRoutes } from './interfaces/routes/file-item.routes';
 import { loggerMiddleware } from './infrastructure/middleware/logger.middleware';
 import { corsMiddleware } from './infrastructure/middleware/cors.middleware';
 import { rateLimitMiddleware } from './infrastructure/middleware/rate-limit.middleware';
+import { originGuardMiddleware } from './infrastructure/middleware/origin-guard.middleware';
 import { NotFoundError } from './domain/errors/not-found.error';
 
 const app = new Hono();
@@ -23,6 +24,7 @@ app.onError((err, c) => {
 app.use('/*', loggerMiddleware);
 app.use('/*', corsMiddleware);
 app.use('/*', rateLimitMiddleware);
+app.use('/*', originGuardMiddleware);
 
 const api = new Hono();
 

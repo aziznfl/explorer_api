@@ -47,3 +47,8 @@ coverage/
 Thumbs.db
 
 drizzle
+
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile
