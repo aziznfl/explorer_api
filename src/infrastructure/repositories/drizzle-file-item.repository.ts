@@ -91,11 +91,12 @@ export class DrizzleFileItemRepository implements FileItemRepository {
         const lastName = lastItem.name.toLowerCase();
 
         return or(
-          gt(typeCol, lastType),
-          and(eq(typeCol, lastType), gt(nameCol, lastName)),
-          and(eq(typeCol, lastType), eq(nameCol, lastName), gt(fileSystemItems.id, lastItem.id))
+          opGt(typeCol, lastType),
+          and(eq(typeCol, lastType), opGt(nameCol, lastName)),
+          and(eq(typeCol, lastType), eq(nameCol, lastName), opGt(fileSystemItems.id, lastItem.id))
         );
       }
+
     }
   }
 
