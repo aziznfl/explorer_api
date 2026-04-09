@@ -24,7 +24,14 @@ app.use('/*', loggerMiddleware);
 app.use('/*', corsMiddleware);
 app.use('/*', rateLimitMiddleware);
 
-app.route('/items', fileItemRoutes);
+const api = new Hono();
+
+const v1 = new Hono();
+v1.route('/items', fileItemRoutes);
+
+api.route('/v1', v1);
+
+app.route('/', api);
 
 export default {
   port: process.env.PORT || 3000,

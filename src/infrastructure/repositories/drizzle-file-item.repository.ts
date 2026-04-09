@@ -142,8 +142,15 @@ export class DrizzleFileItemRepository implements FileItemRepository {
     return results.map((row) => this.mapRowToEntity(row));
   }
 
-  async search(query: string, options: QueryOptions = { sortBy: 'name', order: 'asc', limit: 50 }): Promise<FileItem[]> {
+  async search(query: string, options: QueryOptions = { sortBy: 'name', order: 'asc', limit: 50 }, parentId?: string | null): Promise<FileItem[]> {
     let whereClause: any = ilike(fileSystemItems.name, `%${query}%`);
+
+    if (parentId !== undefined) {
+      const parentFilter = parentId && parentId !== 'root'
+        ? eq(fileSystemItems.parentId, parentId)
+        : isNull(fileSystemItems.parentId);
+      whereClause = and(whereClause, parentFilter);
+    }
 
     if (options.lastId) {
       const [lastItem] = await db.select().from(fileSystemItems).where(eq(fileSystemItems.id, options.lastId));

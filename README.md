@@ -65,11 +65,36 @@ bun run test
 
 ## 📡 API Endpoints
 
-The primary endpoint is `/items`, which handles:
+All endpoints are prefixed with `/v1/items`.
 
-- `GET /items/root/children`: Fetch root-level items (folders and files).
-- `GET /items/:id/children`: Fetch children of a specific folder.
-- `GET /items/search`: Search for items across the file system.
-- `POST /items`: Create new file or folder.
-- `DELETE /items/:id`: Delete an item (soft or hard delete depending on implementation).
-- `PATCH /items/:id`: Update item metadata (e.g., rename).
+### `GET /v1/items`
+
+Unified endpoint for listing and searching items. Controlled by query parameters:
+
+| Query Param | Type | Description |
+|-------------|------|-------------|
+| `parentId` | `string` | Filter by parent folder ID. Omit for root-level items. |
+| `keyword` | `string` | Search items by name. Combined with `parentId` to scope search within a folder. |
+| `sortBy` | `string` | Sort field: `name`, `kind`, `createdAt`. Default: `name`. |
+| `order` | `string` | Sort direction: `asc` or `desc`. Default: `asc`. |
+| `limit` | `number` | Page size. Default: `50`. |
+| `lastId` | `string` | Cursor for pagination (ID of the last item from previous page). |
+
+**Examples:**
+
+```
+GET /v1/items                          → root children
+GET /v1/items?parentId=<id>            → children of a folder
+GET /v1/items?keyword=report           → global search
+GET /v1/items?parentId=<id>&keyword=r  → search within a folder
+GET /v1/items?sortBy=kind&order=desc   → sorted root children
+```
+
+### `POST /v1/items`
+Create a new file or folder.
+
+### `PATCH /v1/items/:id`
+Update item metadata (e.g., rename).
+
+### `DELETE /v1/items/:id`
+Delete an item by ID.
