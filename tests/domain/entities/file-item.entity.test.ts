@@ -9,6 +9,7 @@ describe('FileItem Entity', () => {
       'test-file.txt',
       'file',
       null,
+      null,
       now,
       now
     );
@@ -27,6 +28,7 @@ describe('FileItem Entity', () => {
       '2',
       'test-folder',
       'folder',
+      null,
       '1',
       now,
       now

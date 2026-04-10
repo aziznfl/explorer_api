@@ -15,7 +15,7 @@ describe('FileItemController', () => {
 
   it('should call repository.findAll when getAll is called', async () => {
     const items = [
-      new FileItem('1', 'file1.txt', 'file', null, new Date(), new Date())
+      new FileItem('1', 'file1.txt', 'file', null, null, new Date(), new Date())
     ];
     mockRepository.findAll.mockResolvedValue(items);
 
@@ -25,15 +25,15 @@ describe('FileItemController', () => {
     expect(mockRepository.findAll).toHaveBeenCalled();
   });
 
-  it('should call repository.findByParentId(null) when getRootItems is called', async () => {
-    await controller.getRootItems();
-    expect(mockRepository.findByParentId).toHaveBeenCalledWith(null);
+  it('should call repository.findByParentId(null) when getChildren(null) is called', async () => {
+    await controller.getChildren(null);
+    expect(mockRepository.findByParentId).toHaveBeenCalledWith(null, expect.anything());
   });
 
-  it('should call repository.findByParentId(id) when getChildrenOf is called', async () => {
+  it('should call repository.findByParentId(id) when getChildren(id) is called', async () => {
     const id = 'some-uuid';
-    await controller.getChildrenOf(id);
-    expect(mockRepository.findByParentId).toHaveBeenCalledWith(id);
+    await controller.getChildren(id);
+    expect(mockRepository.findByParentId).toHaveBeenCalledWith(id, expect.anything());
   });
 
   it('should call repository.create with validated body', async () => {
@@ -41,7 +41,7 @@ describe('FileItemController', () => {
       name: 'New Folder',
       type: 'folder',
     };
-    const createdItem = new FileItem('1', body.name, body.type as any, null, new Date(), new Date());
+    const createdItem = new FileItem('1', body.name, body.type as any, null, null, new Date(), new Date());
     mockRepository.create.mockResolvedValue(createdItem);
 
     const result = await controller.create(body);
@@ -55,7 +55,7 @@ describe('FileItemController', () => {
     const body = {
       name: 'Updated Name',
     };
-    const updatedItem = new FileItem(id, body.name, 'file', null, new Date(), new Date());
+    const updatedItem = new FileItem(id, body.name, 'file', null, null, new Date(), new Date());
     mockRepository.update.mockResolvedValue(updatedItem);
 
     const result = await controller.update(id, body);
