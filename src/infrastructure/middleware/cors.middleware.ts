@@ -1,9 +1,9 @@
-import { cors } from 'hono/cors';
+import { cors } from '@elysiajs/cors';
 
 export const corsMiddleware = cors({
-  origin: (origin) => origin,
-  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
+  origin: true, // Will mirror the origin
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   maxAge: 86400,
 });

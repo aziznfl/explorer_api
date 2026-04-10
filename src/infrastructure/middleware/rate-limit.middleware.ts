@@ -1,16 +1,18 @@
-import { rateLimiter } from 'hono-rate-limiter';
-import type { Context } from 'hono';
-import { getConnInfo } from 'hono/bun';
+import { rateLimit } from 'elysia-rate-limit';
 
-export const rateLimitMiddleware = rateLimiter({
-  windowMs: 5 * 1000, // 5 seconds
-  limit: 50, // 20 requests
-  standardHeaders: 'draft-6', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-  keyGenerator: (c: Context) => {
-    const info = getConnInfo(c);
-    return c.req.header('x-forwarded-for') || info?.remote?.address || 'global';
+export const rateLimitMiddleware = rateLimit({
+  duration: 5000, // 5 seconds
+  max: 50, // 50 requests
+  generator: (request) => {
+    return request.headers.get('x-forwarded-for') || 'global';
   },
-  handler: (c: Context) => {
-    return c.json({ meta: { message: 'Too Many Requests', status: 429 } }, 429);
-  },
+  errorResponse: new Response(
+    JSON.stringify({ meta: { message: 'Too Many Requests', status: 429 } }),
+    {
+      status: 429,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  ),
 });

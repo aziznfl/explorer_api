@@ -1,11 +1,11 @@
 # WebExplorer - Backend
 
-A robust backend for the Web Explorer application, built with [Hono](https://hono.dev/) and [Bun](https://bun.sh/). This API handles file system metadata, folder structures, and search functionality using a Clean Architecture approach.
+A robust backend for the Web Explorer application, built with [Elysia](https://elysiajs.com/) and [Bun](https://bun.sh/). This API handles file system metadata, folder structures, and search functionality using a Clean Architecture approach.
 
 ## 🚀 Tech Stack
 
 - **Runtime**: [Bun](https://bun.sh/)
-- **Framework**: [Hono](https://hono.dev/)
+- **Framework**: [Elysia](https://elysiajs.com/)
 - **Database**: [PostgreSQL](https://www.postgresql.org/)
 - **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
 - **Validation**: [Zod](https://zod.dev/)

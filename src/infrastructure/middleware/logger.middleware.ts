@@ -1,22 +1,25 @@
-import type { MiddlewareHandler } from 'hono';
+import { Elysia } from 'elysia';
 
-export const loggerMiddleware: MiddlewareHandler = async (c, next) => {
-  const start = Date.now();
-  const ip = c.req.header('x-forwarded-for') ?? 'unknown';
-  
-  await next();
-  
-  const ms = Date.now() - start;
-  const time = new Date().toISOString().replace('T', ' ').substring(0, 19);
-  
-  const query = c.req.query();
-  const params = c.req.param();
-  const combinedParams = { ...query, ...params };
-  const paramObject = Object.keys(combinedParams).length > 0 
-    ? ` ${JSON.stringify(combinedParams)}` 
-    : '';
+export const loggerMiddleware = new Elysia()
+  .derive({ as: 'global' }, ({ request }) => {
+    return {
+      start: Date.now(),
+      ip: request.headers.get('x-forwarded-for') ?? 'unknown'
+    };
+  })
+  .onAfterHandle({ as: 'global' }, ({ request, start, ip, query, params, set }) => {
+    const ms = Date.now() - start;
+    const time = new Date().toISOString().replace('T', ' ').substring(0, 19);
+    
+    // In Elysia, set.status is where the response status is kept or it defaults to 200
+    const status = set.status || 200;
+    
+    const combinedParams = { ...(query || {}), ...(params || {}) };
+    const paramObject = Object.keys(combinedParams).length > 0 
+      ? ` ${JSON.stringify(combinedParams)}` 
+      : '';
 
-  console.log(
-    `${time} | ${c.res.status} | ${ms}ms | ${ip} | ${c.req.method.padEnd(8)} "${c.req.path}"${paramObject}`
-  );
-};
+    console.log(
+      `${time} | ${status} | ${ms}ms | ${ip} | ${request.method.padEnd(8)} "${new URL(request.url).pathname}"${paramObject}`
+    );
+  });
